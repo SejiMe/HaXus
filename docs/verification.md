@@ -26,10 +26,12 @@ The first AppHost smoke attempt exposed a Release/no-build invocation mismatch w
 
 ## Publication
 
-Target: https://github.com/SejiMe/HaXus, public, default branch main. Remote publication and source commit evidence will be recorded after the verified skeleton is pushed.
+Repository: https://github.com/SejiMe/HaXus. GitHub confirmed PUBLIC visibility and default branch main. Origin is https://github.com/SejiMe/HaXus.git.
+
+Verified skeleton commit: `f3ddd93a06d14835bcf12b44f1d1045a1f2c5a78`. The initial remote main matched this local commit. This subsequent documentation-only commit records publication evidence; obtain the current checkout revision with `git rev-parse HEAD`.
 
 ## Limits and next task
 
 This verifies an operational skeleton, not application features, dependency readiness, production diagnostics, deployment, or Android. No business API, contracts, entities, migrations, dispatcher or feature template is implemented. Readiness is only the standard self check.
 
-Suggested next task: Ugnay - 0003 — confirm the dispatcher contract, integrate the saved feature template, and verify generation/build using isolated examples. It remains unselected. Supporting-service orchestration and UAT remain with Ugnay - 0006.
+Suggested next task: Ugnay - 0003 â€” confirm the dispatcher contract, integrate the saved feature template, and verify generation/build using isolated examples. It remains unselected. Supporting-service orchestration and UAT remain with Ugnay - 0006.
