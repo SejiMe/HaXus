@@ -1,0 +1,10 @@
+.git
+.agents
+.tools
+.artifacts
+**/bin
+**/obj
+.env*
+**/*.pfx
+**/*.p12
+**/*.key

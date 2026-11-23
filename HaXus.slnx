@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/aspire/">
+    <Project Path="aspire/HaXus.AppHost/HaXus.AppHost.csproj" />
+    <Project Path="aspire/HaXus.ServiceDefaults/HaXus.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/HaXus.Contracts/HaXus.Contracts.csproj" />
+    <Project Path="src/HaXus.Ugnay/HaXus.Ugnay.csproj" />
+  </Folder>
+</Solution>

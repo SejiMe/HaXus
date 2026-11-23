@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="../HaXus.Contracts/HaXus.Contracts.csproj" />
+    <ProjectReference Include="../../aspire/HaXus.ServiceDefaults/HaXus.ServiceDefaults.csproj" />
+  </ItemGroup>
+</Project>
