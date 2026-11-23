@@ -1,6 +1,6 @@
 # HaXus
 
-Initial .NET 10 backend and Aspire 17 skeleton. No business features are implemented.
+.NET 10 backend and Aspire 17 skeleton with a backend feature template. No business features are implemented.
 
 ## Prerequisites and setup
 
@@ -31,9 +31,10 @@ The host's Development launch profile uses `http://localhost:5190`. `/health` an
 
 - [Setup and commands](docs/setup.md)
 - [Architecture and boundaries](docs/architecture.md)
+- [Feature template](docs/feature-template.md)
 - [Verification evidence](docs/verification.md)
 - [Deployment placeholder](docs/deployment/README.md)
 - [Agent guidance](AGENTS.md) and [resource inventory](.agents/README.md)
 - [Third-party notices](docs/third-party-notices.md)
 
-Suggested next task: Ugnay - 0003 â€” integrate and verify the backend feature template. This recommendation does not select or execute it.
+Suggested next task: Ugnay - 0006 - wire AppHost and local Compose UAT (published-image checks depend on Ugnay - 0007). This recommendation does not select or execute it.

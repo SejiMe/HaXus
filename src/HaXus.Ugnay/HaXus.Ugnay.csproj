@@ -2,5 +2,6 @@
   <ItemGroup>
     <ProjectReference Include="../HaXus.Contracts/HaXus.Contracts.csproj" />
     <ProjectReference Include="../../aspire/HaXus.ServiceDefaults/HaXus.ServiceDefaults.csproj" />
+    <PackageReference Include="Mediator.Abstractions" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 # Verification
 
-Verified on 2026-11-23 for Ugnay - 0010.
+Verification history for the initial skeleton and backend feature template. Both were verified on 2026-11-23. The initial sections below record Ugnay - 0010; the final section records Ugnay - 0003.
 
 ## Baseline
 
@@ -30,8 +30,43 @@ Repository: https://github.com/SejiMe/HaXus. GitHub confirmed PUBLIC visibility 
 
 Verified skeleton commit: `f3ddd93a06d14835bcf12b44f1d1045a1f2c5a78`. The initial remote main matched this local commit. This subsequent documentation-only commit records publication evidence; obtain the current checkout revision with `git rev-parse HEAD`.
 
-## Limits and next task
+## Initial skeleton limits
 
-This verifies an operational skeleton, not application features, dependency readiness, production diagnostics, deployment, or Android. No business API, contracts, entities, migrations, dispatcher or feature template is implemented. Readiness is only the standard self check.
+At completion of Ugnay - 0010, the checkout had no dispatcher contract or feature template. Readiness checked only the standard self check. The subsequent template work below supersedes that setup limitation without adding business features, external dependency readiness, production diagnostics, deployment, or Android.
 
-Suggested next task: Ugnay - 0003 â€” confirm the dispatcher contract, integrate the saved feature template, and verify generation/build using isolated examples. It remains unselected. Supporting-service orchestration and UAT remain with Ugnay - 0006.
+## Ugnay - 0003: backend feature template
+
+### Delivered
+
+- Installable `haxus-feature` item template with saved configuration, CLI aliases, action-prefixed files, and genuinely empty folders-only output.
+- Host-owned IApplicationDispatcher contract with query/command overloads, ValueTask results, and optional cancellation tokens.
+- Mediator.Abstractions and Mediator.SourceGenerator pinned to 3.0.2. The production host references only Abstractions; SourceGenerator and the dispatcher implementation are confined to isolated verification.
+- Empty local transport/application records, explicit NotImplementedException handlers, explicit route-pattern mapping helpers, and method-appropriate binding. No automatic production route registration.
+
+### Passed checks
+
+| Check | Result |
+|---|---|
+| `python scripts/verify-template.py` | Passed all generation and runtime checks |
+| Default and selective generation | Exact owner/capability/action paths, prefixed filenames and namespaces; query, command, both, all aliases and name overrides |
+| HTTP methods | GET queries; Post/Put/Patch/Delete commands with matching default action names and binding |
+| Folders-only | Api/Application capability directories created without emitted placeholder files |
+| Invalid inputs | Missing owner, invalid method, and unknown option rejected |
+| Existing source | Adding a command preserved an edited query byte-for-byte; conflicting generation refused without changes |
+| Compiled test host | Real generated Mediator dispatch and scoped pipeline execution passed for all verbs |
+| Binding and cancellation | Route/query/JSON values round-tripped using test-only fields; missing/malformed JSON rejected; original endpoint cancellation tokens forwarded and canceled dispatch observed |
+| Lifetime | Separate operation scopes and asynchronous scoped dependency disposal verified, including failing operations |
+| Production tree | Unchanged by template checks; no Fleet source installed or feature routes exposed |
+| Locked restore and Release build | Passed; solution build had zero warnings and zero errors |
+| Operational smoke checks | Standalone Development, Production and AppHost passed; Fleet paths returned 404; verification listeners stopped |
+| Normal installation | `dotnet new install ./templates/haxus-feature` succeeded |
+
+The operational cleanup check now inspects active IPv4/IPv6 listeners and waits for all verification ports to close, avoiding false failures from TCP shutdown/TIME_WAIT state.
+
+Local template logs: `.artifacts/template-verification/run-b2yma84w/`. Operational logs: `.artifacts/verification/`. Both are ignored and not published. The generated test host and template cache remain isolated under ignored artifacts.
+
+### Publication and limits
+
+Code/publication commit evidence will be recorded after the verified change is pushed. The production operation-scope/caller-context gateway, runtime policy pipeline, business features and external services remain deferred. The fixture dispatcher provides no production security guarantee.
+
+Suggested next task: Ugnay - 0006 - wire AppHost and local Compose UAT. Its published-image UAT checks depend on Ugnay - 0007. Neither task is selected automatically.

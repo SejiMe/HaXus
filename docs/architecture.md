@@ -17,14 +17,16 @@ The Ugnay host references neither Shared nor Android. Contracts references neith
 
 The selected Minimal Web API/vertical-slice plan is a documentation baseline, not an existing source checkout to clone. The initial host therefore uses minimal ASP.NET Core startup, with sample routes omitted. The standard ServiceDefaults source and dependency pins come from the official Aspire 17.0.0 template package; see third-party notices.
 
-Core, Kandado, and Hanay have empty Api, Application, and UI branches. These record ownership and entry boundaries, not capabilities. Infrastructure and common-interface directories likewise contain placeholders. No custom dispatcher, Mediator, persistence, security, Serilog integration, or product behavior is implemented. Standard OpenTelemetry export activates only when an OTLP endpoint is configured.
+Core, Kandado, and Hanay have empty Api, Application, and UI branches. These record ownership and entry boundaries, not capabilities. Infrastructure and common-interface directories likewise contain placeholders. Only the IApplicationDispatcher interface and Mediator.Abstractions dependency are present. No production dispatcher implementation, Mediator composition, persistence, security, Serilog integration, or product behavior is implemented. Standard OpenTelemetry export activates only when an OTLP endpoint is configured.
 
 The only operational HTTP routes are Development-only `/health` and `/alive`. Readiness currently checks only the standard self check; it does not verify any external dependency. No public business API or wire types are introduced.
 
 ## Subsequent work
 
-Suggested next task: Ugnay - 0003 — confirm the host dispatcher contract, install the backend feature template, and verify generated operations in isolated fixtures. The reserved templates/haxus-feature directory does not yet provide an installable template.
+Ugnay - 0003 provides an installable [feature template](feature-template.md) and a dispatcher interface verified through an isolated test-only Mediator host. Generated Fleet examples remain ignored fixtures. Production operation scope/caller context and feature routes remain deferred.
+
+Suggested next task: Ugnay - 0006 - supporting-service orchestration and local Compose UAT; its published-image checks depend on Ugnay - 0007.
 
 Ugnay - 0006 owns external service topology and Compose UAT; Ugnay - 0007 owns release automation; Ugnay - 0008 owns telemetry/recovery validation; Ugnay - 0009 owns later Android release verification. No follow-up task is automatically selected by this handoff.
 
-Shared Razor UI, Android, feature handlers/endpoints/entities, migrations, authentication, supporting services, and deployment remain deferred. Tests/ currently reserves future business tests; the skeleton is validated with restore/build and operational smoke checks.
+Shared Razor UI, Android, feature handlers/endpoints/entities, migrations, authentication, supporting services, and deployment remain deferred. Tests/ contains the template verification host source and reserves future business tests; the skeleton is validated with restore/build and operational smoke checks.

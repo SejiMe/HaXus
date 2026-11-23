@@ -1,6 +1,6 @@
 # Agent resources
 
-No project-owned skills or workflows are installed in this checkout. AGENTS.md supplies repository guidance; docs/ supplies public setup and architecture references.
+No project-owned skills or workflows are installed in this checkout. The Ugnay-owned backend item template is available at templates/haxus-feature; use it when scaffolding an explicitly authorized backend operation. Its isolated verification runner is scripts/verify-template.py. See [template guidance](../docs/feature-template.md). AGENTS.md supplies repository guidance; docs/ supplies public setup and architecture references.
 
 Shared prerequisites: the agent's machine-level task and documentation workflows, .NET SDK 10.0.102, Git, and the local Aspire CLI 17.0.0 bundle. Machine-level skills are not copied into this repository.
 

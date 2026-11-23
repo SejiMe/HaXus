@@ -12,10 +12,11 @@ foreach ($name in @('ASPNETCORE_ENVIRONMENT', 'DOTNET_ENVIRONMENT', 'ASPNETCORE_
 }
 
 function Assert-PortAvailable([int]$Port) {
-    $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $Port)
-    try { $listener.Start() }
-    catch { throw "Port $Port must be free before verification." }
-    finally { $listener.Stop() }
+    # A bind probe can reject TIME_WAIT sockets even after the owned listener has stopped.
+    $listeners = [System.Net.NetworkInformation.IPGlobalProperties]::GetIPGlobalProperties().GetActiveTcpListeners()
+    if ($listeners | Where-Object { $_.Port -eq $Port }) {
+        throw "Port $Port has an active listener; it must be free before verification."
+    }
 }
 
 function Assert-Status([string]$Path, [int]$Expected) {
@@ -55,6 +56,8 @@ function Test-Host([string]$Name, [string]$Project, [string]$Environment, [switc
         Assert-Status '/alive' $expected
         Assert-Status '/' 404
         Assert-Status '/weatherforecast' 404
+        Assert-Status '/fleet' 404
+        Assert-Status '/api/hanay/fleet' 404
         Write-Output "PASS $Name (health, liveness, and absent sample routes)"
     } finally {
         if (-not $process.HasExited) {
@@ -65,10 +68,13 @@ function Test-Host([string]$Name, [string]$Project, [string]$Environment, [switc
     }
     $stopDeadline = [DateTime]::UtcNow.AddSeconds(10)
     while ([DateTime]::UtcNow -lt $stopDeadline) {
-        try { Assert-PortAvailable 5190; return }
-        catch { Start-Sleep -Milliseconds 200 }
+        try {
+            $ports = if ($AppHost) { @(5190,15888,18889,18890) } else { @(5190) }
+            foreach ($port in $ports) { Assert-PortAvailable $port }
+            return
+        } catch { Start-Sleep -Milliseconds 200 }
     }
-    throw "$Name left port 5190 in use after shutdown."
+    throw "$Name left a verification listener active after shutdown."
 }
 
 try {

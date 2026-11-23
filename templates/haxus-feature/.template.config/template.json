@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json.schemastore.org/template",
+  "author": "HaXus",
+  "classifications": [
+    "HaXus",
+    "Web API",
+    "Vertical Slice"
+  ],
+  "identity": "HaXus.Backend.Feature",
+  "name": "HaXus Backend Feature",
+  "shortName": "haxus-feature",
+  "description": "Scaffolds HaXus Application CQRS operations and their Minimal API endpoints.",
+  "sourceName": "FeatureToken",
+  "preferNameDirectory": false,
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "placeholderFilename": "-.-",
+  "symbols": {
+    "owner": {
+      "type": "parameter",
+      "datatype": "string",
+      "description": "PascalCase feature owner, such as Hanay.",
+      "isRequired": true,
+      "replaces": "OwnerToken",
+      "fileRename": "OwnerToken"
+    },
+    "query": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "defaultIfOptionWithoutValue": "true",
+      "description": "Generate the query action. When neither action is selected, generate both."
+    },
+    "command": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "defaultIfOptionWithoutValue": "true",
+      "description": "Generate the command action. When neither action is selected, generate both."
+    },
+    "foldersOnly": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "defaultIfOptionWithoutValue": "true",
+      "description": "Create only the empty Api and Application capability directories."
+    },
+    "queryName": {
+      "type": "parameter",
+      "datatype": "string",
+      "description": "Override the query action name without the Query suffix."
+    },
+    "commandName": {
+      "type": "parameter",
+      "datatype": "string",
+      "description": "Override the command action name without the Command suffix."
+    },
+    "commandMethod": {
+      "type": "parameter",
+      "datatype": "choice",
+      "description": "HTTP method for the command endpoint.",
+      "defaultValue": "Post",
+      "choices": [
+        {
+          "choice": "Post",
+          "description": "Create a resource or perform an action."
+        },
+        {
+          "choice": "Put",
+          "description": "Replace a resource."
+        },
+        {
+          "choice": "Patch",
+          "description": "Update part of a resource."
+        },
+        {
+          "choice": "Delete",
+          "description": "Delete a resource."
+        }
+      ],
+      "replaces": "CommandMethodToken"
+    },
+    "defaultQueryName": {
+      "type": "generated",
+      "generator": "join",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "const",
+            "value": "Get"
+          },
+          {
+            "type": "ref",
+            "value": "name"
+          }
+        ],
+        "separator": ""
+      }
+    },
+    "commandVerb": {
+      "type": "generated",
+      "generator": "switch",
+      "parameters": {
+        "cases": [
+          {
+            "condition": "(commandMethod == \"Put\")",
+            "value": "Replace"
+          },
+          {
+            "condition": "(commandMethod == \"Patch\")",
+            "value": "Update"
+          },
+          {
+            "condition": "(commandMethod == \"Delete\")",
+            "value": "Delete"
+          },
+          {
+            "condition": "",
+            "value": "Create"
+          }
+        ]
+      }
+    },
+    "defaultCommandName": {
+      "type": "generated",
+      "generator": "join",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "commandVerb"
+          },
+          {
+            "type": "ref",
+            "value": "name"
+          }
+        ],
+        "separator": ""
+      }
+    },
+    "queryAction": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "queryName",
+        "fallbackVariableName": "defaultQueryName"
+      },
+      "replaces": "QueryActionToken",
+      "fileRename": "QueryActionToken"
+    },
+    "commandAction": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "commandName",
+        "fallbackVariableName": "defaultCommandName"
+      },
+      "replaces": "CommandActionToken",
+      "fileRename": "CommandActionToken"
+    }
+  },
+  "sources": [
+    {
+      "source": "./content/query/",
+      "target": "./",
+      "condition": "(!foldersOnly && (query || !command))"
+    },
+    {
+      "source": "./content/command/",
+      "target": "./",
+      "condition": "(!foldersOnly && (command || !query))"
+    },
+    {
+      "source": "./content/folders/",
+      "target": "./",
+      "condition": "(foldersOnly)"
+    }
+  ]
+}
