@@ -67,6 +67,6 @@ Local template logs: `.artifacts/template-verification/run-b2yma84w/`. Operation
 
 ### Publication and limits
 
-Code/publication commit evidence will be recorded after the verified change is pushed. The production operation-scope/caller-context gateway, runtime policy pipeline, business features and external services remain deferred. The fixture dispatcher provides no production security guarantee.
+Verified integration commit: `e142e3f0d626fee395894dace448288950cae7f7`. Local HEAD and remote main matched after the public push, with a clean working tree. This subsequent documentation-only commit records that publication evidence; use `git rev-parse HEAD` for the latest revision. The production operation-scope/caller-context gateway, runtime policy pipeline, business features and external services remain deferred. The fixture dispatcher provides no production security guarantee.
 
 Suggested next task: Ugnay - 0006 - wire AppHost and local Compose UAT. Its published-image UAT checks depend on Ugnay - 0007. Neither task is selected automatically.
