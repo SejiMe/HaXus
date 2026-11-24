@@ -1,0 +1,303 @@
+{
+  "networks": {
+    "aspire": {
+      "driver": "bridge"
+    }
+  },
+  "services": {
+    "application-db": {
+      "environment": {
+        "PGDATA": "/var/lib/postgresql/18/docker",
+        "POSTGRES_HOST_AUTH_METHOD": "scram-sha-256",
+        "POSTGRES_INITDB_ARGS": "--auth-host=scram-sha-256 --auth-local=scram-sha-256",
+        "POSTGRES_PASSWORD_FILE": "/run/secrets/admin",
+        "POSTGRES_USER": "postgres"
+      },
+      "expose": [
+        "5432"
+      ],
+      "image": "docker.io/library/postgres@sha256:1cb81a9168d2cbd336f29a4a363d121929e32d5d448dd5cab596bf6253372e86",
+      "networks": {
+        "aspire": null
+      },
+      "volumes": [
+        {
+          "read_only": false,
+          "source": "application-db",
+          "target": "/var/lib/postgresql",
+          "type": "volume"
+        },
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/app-db/admin",
+          "target": "/run/secrets/admin",
+          "type": "bind"
+        },
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/app-db/init",
+          "target": "/docker-entrypoint-initdb.d",
+          "type": "bind"
+        }
+      ],
+      "restart": "unless-stopped",
+      "platform": "linux/amd64",
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U postgres -d postgres"
+        ],
+        "interval": "3s",
+        "timeout": "3s",
+        "retries": 40
+      }
+    },
+    "compose-dashboard": {
+      "environment": {
+        "ASPIRE_DASHBOARD_TELEMETRY_OPTOUT": "true",
+        "ASPIRE_DASHBOARD_CONFIG_FILE_PATH": "/run/secrets/dashboard.json",
+        "ASPNETCORE_URLS": "http://0.0.0.0:18888",
+        "DASHBOARD__OTLP__GRPCENDPOINTURL": "http://0.0.0.0:18889",
+        "DASHBOARD__OTLP__HTTPENDPOINTURL": "http://0.0.0.0:18890"
+      },
+      "expose": [
+        "18889",
+        "18890"
+      ],
+      "image": "mcr.microsoft.com/aspire/dashboard@sha256:6884125996f7ccc9962a39c6a430eff207e772f65d86938491303e5bd196be15",
+      "networks": {
+        "aspire": null
+      },
+      "restart": "unless-stopped",
+      "platform": "linux/amd64",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "${HAXUS_SECRET_ROOT}/dashboard/config.json",
+          "target": "/run/secrets/dashboard.json",
+          "read_only": true
+        }
+      ]
+    },
+    "keycloak": {
+      "command": [
+        "--config-file=/run/secrets/keycloak.conf",
+        "start"
+      ],
+      "depends_on": {
+        "support-db": {
+          "condition": "service_healthy",
+          "required": true
+        }
+      },
+      "environment": {
+        "KC_DB_URL": "jdbc:postgresql://support-db:5432/keycloak"
+      },
+      "expose": [
+        "8080",
+        "9000"
+      ],
+      "image": "quay.io/keycloak/keycloak@sha256:75b5c435a83b530caba5923922f93d47b2e3f8b4ad9e79200581122996653e55",
+      "networks": {
+        "aspire": null
+      },
+      "volumes": [
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/keycloak/keycloak.conf",
+          "target": "/run/secrets/keycloak.conf",
+          "type": "bind"
+        }
+      ],
+      "restart": "unless-stopped",
+      "platform": "linux/amd64"
+    },
+    "kusa": {
+      "depends_on": {
+        "support-db": {
+          "condition": "service_healthy",
+          "required": true
+        }
+      },
+      "environment": {
+        "DB_POSTGRESDB_DATABASE": "kusa",
+        "DB_POSTGRESDB_HOST": "support-db",
+        "DB_POSTGRESDB_PASSWORD_FILE": "/run/secrets/database-password",
+        "DB_POSTGRESDB_PORT": "5432",
+        "DB_POSTGRESDB_USER": "kusa",
+        "DB_TYPE": "postgresdb",
+        "N8N_DIAGNOSTICS_ENABLED": "false",
+        "N8N_ENCRYPTION_KEY_FILE": "/run/secrets/encryption-key",
+        "N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS": "true",
+        "N8N_TEMPLATES_ENABLED": "false",
+        "N8N_VERSION_NOTIFICATIONS_ENABLED": "false"
+      },
+      "expose": [
+        "5678"
+      ],
+      "image": "docker.n8n.io/n8nio/n8n@sha256:ccf6f1301731fb4f89bd05b6bd21400da59f56606d087f56b6affc383ca837ad",
+      "networks": {
+        "aspire": null
+      },
+      "volumes": [
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/kusa/password",
+          "target": "/run/secrets/database-password",
+          "type": "bind"
+        },
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/kusa/encryption-key",
+          "target": "/run/secrets/encryption-key",
+          "type": "bind"
+        },
+        {
+          "read_only": false,
+          "source": "kusa",
+          "target": "/home/node/.n8n",
+          "type": "volume"
+        }
+      ],
+      "restart": "unless-stopped",
+      "platform": "linux/amd64"
+    },
+    "openbao": {
+      "command": [
+        "server",
+        "-config=/run/secrets/server.hcl"
+      ],
+      "expose": [
+        "8200"
+      ],
+      "image": "ghcr.io/openbao/openbao@sha256:b9418c63e2185157d8ee8689a8a93265d5aadad677d6320156172bd42ad3b10b",
+      "networks": {
+        "aspire": null
+      },
+      "volumes": [
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/openbao/server.hcl",
+          "target": "/run/secrets/server.hcl",
+          "type": "bind"
+        },
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/openbao/server.pem",
+          "target": "/run/secrets/server.pem",
+          "type": "bind"
+        },
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/openbao/server-key.pem",
+          "target": "/run/secrets/server-key.pem",
+          "type": "bind"
+        },
+        {
+          "read_only": false,
+          "source": "openbao",
+          "target": "/openbao/file",
+          "type": "volume"
+        }
+      ],
+      "restart": "unless-stopped",
+      "platform": "linux/amd64"
+    },
+    "support-db": {
+      "environment": {
+        "PGDATA": "/var/lib/postgresql/18/docker",
+        "POSTGRES_HOST_AUTH_METHOD": "scram-sha-256",
+        "POSTGRES_INITDB_ARGS": "--auth-host=scram-sha-256 --auth-local=scram-sha-256",
+        "POSTGRES_PASSWORD_FILE": "/run/secrets/admin",
+        "POSTGRES_USER": "postgres"
+      },
+      "expose": [
+        "5432"
+      ],
+      "image": "docker.io/library/postgres@sha256:1cb81a9168d2cbd336f29a4a363d121929e32d5d448dd5cab596bf6253372e86",
+      "networks": {
+        "aspire": null
+      },
+      "volumes": [
+        {
+          "read_only": false,
+          "source": "support-db",
+          "target": "/var/lib/postgresql",
+          "type": "volume"
+        },
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/support-db/admin",
+          "target": "/run/secrets/admin",
+          "type": "bind"
+        },
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/support-db/init",
+          "target": "/docker-entrypoint-initdb.d",
+          "type": "bind"
+        }
+      ],
+      "restart": "unless-stopped",
+      "platform": "linux/amd64",
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U postgres -d postgres"
+        ],
+        "interval": "3s",
+        "timeout": "3s",
+        "retries": 40
+      }
+    },
+    "ugnay": {
+      "depends_on": {
+        "application-db": {
+          "condition": "service_healthy",
+          "required": true
+        }
+      },
+      "environment": {
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
+        "HAXUS_APP_SECRETS": "/run/secrets/ugnay",
+        "HTTP_PORTS": "8080",
+        "HealthChecks__Enabled": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "OTEL_EXPORTER_OTLP_ENDPOINT": "http://compose-dashboard:18889",
+        "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
+        "OTEL_SERVICE_NAME": "ugnay"
+      },
+      "expose": [
+        "8080"
+      ],
+      "image": "${UGNAY_IMAGE}",
+      "networks": {
+        "aspire": null
+      },
+      "volumes": [
+        {
+          "read_only": true,
+          "source": "${HAXUS_SECRET_ROOT}/ugnay",
+          "target": "/run/secrets/ugnay",
+          "type": "bind"
+        }
+      ],
+      "restart": "unless-stopped",
+      "platform": "linux/amd64"
+    }
+  },
+  "volumes": {
+    "application-db": {
+      "driver": "local"
+    },
+    "kusa": {
+      "driver": "local"
+    },
+    "openbao": {
+      "driver": "local"
+    },
+    "support-db": {
+      "driver": "local"
+    }
+  }
+}

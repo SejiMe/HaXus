@@ -7,4 +7,7 @@
     <Project Path="src/HaXus.Contracts/HaXus.Contracts.csproj" />
     <Project Path="src/HaXus.Ugnay/HaXus.Ugnay.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/InfrastructureProbes/InfrastructureProbes.csproj" />
+  </Folder>
 </Solution>

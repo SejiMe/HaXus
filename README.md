@@ -18,18 +18,19 @@ On Linux/macOS, invoke `.tools/aspire` and prepend `.tools` to PATH using your s
 
 ## Run
 
+The host now requires PostgreSQL. Use the [local infrastructure launcher](docs/infrastructure.md) rather than launching an unconfigured host:
+
 ```powershell
-# Host alone; no external services required.
-dotnet run --project src/HaXus.Ugnay --configuration Release --no-build
-# Or start the single-resource Aspire skeleton.
-dotnet run --project aspire/HaXus.AppHost
+if (-not (Test-Path .env.local)) { Copy-Item .env.example .env.local }
+pwsh -File scripts/dev.ps1
 ```
 
-The host's Development launch profile uses `http://localhost:5190`. `/health` and `/alive` are Development-only operational endpoints. `/` and `/weatherforecast` return 404. Aspire development startup builds Debug output; the acceptance build above validates Release independently. AppHost starts only the `ugnay` resource and the local Aspire Dashboard; use the generated authenticated Dashboard URL printed at startup. Press Ctrl+C to stop.
+The infrastructure is implemented locally but real-container verification is currently blocked by Docker engine availability. No release-image UAT or production deployment is claimed.
 
 ## Documentation
 
 - [Setup and commands](docs/setup.md)
+- [Local infrastructure and probes](docs/infrastructure.md)
 - [Architecture and boundaries](docs/architecture.md)
 - [Feature template](docs/feature-template.md)
 - [Verification evidence](docs/verification.md)

@@ -30,3 +30,7 @@ Suggested next task: Ugnay - 0006 - supporting-service orchestration and local C
 Ugnay - 0006 owns external service topology and Compose UAT; Ugnay - 0007 owns release automation; Ugnay - 0008 owns telemetry/recovery validation; Ugnay - 0009 owns later Android release verification. No follow-up task is automatically selected by this handoff.
 
 Shared Razor UI, Android, feature handlers/endpoints/entities, migrations, authentication, supporting services, and deployment remain deferred. Tests/ contains the template verification host source and reserves future business tests; the skeleton is validated with restore/build and operational smoke checks.
+
+## Infrastructure increment
+
+Ugnay - 0006 adds the [local service topology and probes](infrastructure.md), including real Npgsql database readiness. Keycloak/OpenBao adapters and policy enforcement remain absent from production. The standalone InfrastructureProbes executable is a test/development tool, not a production feature project. Runtime container checks are pending Docker engine recovery.

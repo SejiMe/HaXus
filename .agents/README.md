@@ -7,3 +7,5 @@ Shared prerequisites: the agent's machine-level task and documentation workflows
 Planned capabilities include vertical slices, identity/access, data/migrations, web/Android UI, deployment/diagnostics, and automation workflows. They become available only when their owned skill files are implemented and verified.
 
 For every future skill addition, record its relative path, owner, trigger, and upstream source/pinned revision when imported. Review imported instructions and scripts before adoption. Keep this inventory current.
+
+Infrastructure tooling: read [infrastructure guidance](../docs/infrastructure.md) before launch, Compose regeneration, or outage verification. `scripts/dev.ps1` owns daily source startup; `scripts/infrastructure.py verify` and `scripts/verify-source.py` use disposable UUID-owned resources. Their local fixtures do not satisfy Jenkins-image UAT. No production Keycloak/OpenBao adapter or agent skill is provided by these probes.

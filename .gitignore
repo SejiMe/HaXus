@@ -16,3 +16,8 @@
 *.key
 __pycache__/
 .DS_Store
+
+!.env.uat.example
+**/aspire-output/
+deploy/compose/env/*.env
+**/.aspire/

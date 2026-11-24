@@ -1,0 +1,37 @@
+{
+  "postgres": {
+    "image": "docker.io/library/postgres",
+    "tag": "18.7-bookworm",
+    "digest": "sha256:1cb81a9168d2cbd336f29a4a363d121929e32d5d448dd5cab596bf6253372e86"
+  },
+  "keycloak": {
+    "image": "quay.io/keycloak/keycloak",
+    "tag": "26.8.2",
+    "digest": "sha256:75b5c435a83b530caba5923922f93d47b2e3f8b4ad9e79200581122996653e55"
+  },
+  "openbao": {
+    "image": "ghcr.io/openbao/openbao",
+    "tag": "2.7.3",
+    "digest": "sha256:b9418c63e2185157d8ee8689a8a93265d5aadad677d6320156172bd42ad3b10b"
+  },
+  "kusa": {
+    "image": "docker.n8n.io/n8nio/n8n",
+    "tag": "2.48.8",
+    "digest": "sha256:ccf6f1301731fb4f89bd05b6bd21400da59f56606d087f56b6affc383ca837ad"
+  },
+  "dashboard": {
+    "image": "mcr.microsoft.com/aspire/dashboard",
+    "tag": "17.0.0",
+    "digest": "sha256:6884125996f7ccc9962a39c6a430eff207e772f65d86938491303e5bd196be15"
+  },
+  "sdk": {
+    "image": "mcr.microsoft.com/dotnet/sdk",
+    "tag": "10.0.102",
+    "digest": "sha256:6a135580d677983f9bf4094fe1918a64e80536b9544e6c68160f6a515a5312f0"
+  },
+  "aspnet": {
+    "image": "mcr.microsoft.com/dotnet/aspnet",
+    "tag": "10.0.2",
+    "digest": "sha256:242b8429bdef9731e6c05931a7caec0dedf9e94462d8f6d12fc47ba03f0d3692"
+  }
+}
