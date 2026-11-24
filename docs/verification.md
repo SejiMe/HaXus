@@ -100,3 +100,5 @@ The aggregate entry point is `pwsh -File scripts/verify.ps1`; the commands above
 Ugnay - 0006 remains On-Hold. Outstanding acceptance: Jenkins-published immutable-image UAT, and real Keycloak/OpenBao-dependent workflows. Synthetic discovery/Transit probes do not implement sign-in, sessions, authorization, production key adapters or a production dispatcher gateway.
 
 Suggested next task: Ugnay - 0007 - implement and verify the Jenkins release flow. Do not activate it automatically.
+
+Verified infrastructure commit: `85fe68047b0fb1579037fa42a1eb0f7a17eec841`. It was pushed to the public SejiMe/HaXus main branch and the remote commit matched locally. This subsequent evidence-only commit records publication; use `git rev-parse HEAD` for the latest revision.
